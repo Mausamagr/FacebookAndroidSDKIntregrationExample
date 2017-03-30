@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FacebookAssignment</string>
+    <string name="app_id">391208654611217</string>
+    <string name="like_category">Category: %1$s</string>
+</resources>
