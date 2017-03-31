@@ -30,8 +30,8 @@ public class FbUserAdapter extends RecyclerView.Adapter<FbUserAdapter.FollowerVi
         Userslikes = new ArrayList<>();
     }
 
-    public void setFollowers(List<Response> followers) {
-        this.Userslikes = followers;
+    public void setData(List<Response> data) {
+        this.Userslikes = data;
     }
 
     public void setCallback(FbUserAdapter.Callback callback) {

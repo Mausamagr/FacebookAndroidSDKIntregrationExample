@@ -11,7 +11,7 @@ import java.util.List;
  * Created by mausamkumari on 3/29/17.
  */
 
-public class Response {
+public class Response implements Parcelable {
 
     @SerializedName("name")
     public String name;
@@ -58,5 +58,33 @@ public class Response {
     public String getPictureUrl() {
         return picture;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.name);
+        parcel.writeString(this.category);
+        parcel.writeString(this.picture);
+    }
+
+    protected Response(Parcel in) {
+        this.name = in.readString();
+        this.category = in.readString();
+        this.picture = in.readString();
+    }
+
+    public static final Creator<Response> CREATOR = new Creator<Response>() {
+        public Response createFromParcel(Parcel source) {
+            return new Response(source);
+        }
+
+        public Response[] newArray(int size) {
+            return new Response[size];
+        }
+    };
 
 }

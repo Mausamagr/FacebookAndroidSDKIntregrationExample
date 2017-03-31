@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -19,7 +16,7 @@ import java.util.Arrays;
 
 import example.facebook.com.facebookassignment.R;
 
-public class FacebookLoginActivity extends AppCompatActivity {
+public class FacebookLoginActivity extends AppCompatActivity implements FacebookCallback<LoginResult>{
 
     private CallbackManager callbackManager;
     private LoginManager loginManager;
@@ -29,35 +26,16 @@ public class FacebookLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if(isLoggedIn()) {
-            Intent intent = new Intent(FacebookLoginActivity.this, FbUsersFriendActivity.class);
-            startActivity(intent);
+            launcherUserLikesActivity();
             this.finish();
         }
 
         setContentView(R.layout.activity_facebook_login);
         loginManager = LoginManager.getInstance();
-        loginManager.logInWithReadPermissions(this, Arrays.asList("user_likes","public_profile", "read_custom_friendlists"));
         callbackManager = CallbackManager.Factory.create();
-
-        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("fb_login_sdk", "callback success" + loginResult.getAccessToken().getToken());
-                Intent intent = new Intent(FacebookLoginActivity.this, FbUsersFriendActivity.class);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("fb_login_sdk", "callback cancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d("fb_login_sdk", "callback onError");
-            }
-        });
+        loginManager.registerCallback(callbackManager, this);
     }
+
 
     private boolean isLoggedIn() {
         AccessToken accesstoken = AccessToken.getCurrentAccessToken();
@@ -70,4 +48,24 @@ public class FacebookLoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void launcherUserLikesActivity() {
+        Intent intent = new Intent(FacebookLoginActivity.this, FbUsersLikesActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        Log.d("fb_login_sdk", "callback success" + loginResult.getAccessToken().getToken());
+        launcherUserLikesActivity();
+    }
+
+    @Override
+    public void onCancel() {
+        Log.d("fb_login_sdk", "callback cancel");
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        Log.d("fb_login_sdk", "callback onError");
+    }
 }
